@@ -1,13 +1,15 @@
 "use client";
 
 import { useCallback, useState, useRef } from "react";
+import { AdFormatSpec } from "@/lib/types";
 
 interface FileUploaderProps {
   onFileSelect: (file: File) => void;
   previewUrl: string | null;
+  spec: AdFormatSpec;
 }
 
-export default function FileUploader({ onFileSelect, previewUrl }: FileUploaderProps) {
+export default function FileUploader({ onFileSelect, previewUrl, spec }: FileUploaderProps) {
   const [isDragging, setIsDragging] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -37,6 +39,8 @@ export default function FileUploader({ onFileSelect, previewUrl }: FileUploaderP
     setIsDragging(false);
   }, []);
 
+  const isVideo = spec.mediaType === "video";
+
   return (
     <div className="w-full">
       <div
@@ -56,7 +60,7 @@ export default function FileUploader({ onFileSelect, previewUrl }: FileUploaderP
         <input
           ref={inputRef}
           type="file"
-          accept="image/png,image/jpeg,image/webp"
+          accept={spec.acceptInput}
           className="hidden"
           onChange={(e) => {
             const file = e.target.files?.[0];
@@ -66,11 +70,19 @@ export default function FileUploader({ onFileSelect, previewUrl }: FileUploaderP
 
         {previewUrl ? (
           <div className="w-full flex flex-col items-center gap-4">
-            <img
-              src={previewUrl}
-              alt="업로드된 소재 프리뷰"
-              className="max-h-[400px] rounded-lg shadow-md object-contain"
-            />
+            {isVideo ? (
+              <video
+                src={previewUrl}
+                controls
+                className="max-h-[400px] rounded-lg shadow-md"
+              />
+            ) : (
+              <img
+                src={previewUrl}
+                alt="업로드된 소재 프리뷰"
+                className="max-h-[400px] rounded-lg shadow-md object-contain"
+              />
+            )}
             <p className="text-sm text-gray-500">
               다른 파일을 업로드하려면 클릭하거나 드래그하세요
             </p>
@@ -78,26 +90,23 @@ export default function FileUploader({ onFileSelect, previewUrl }: FileUploaderP
         ) : (
           <div className="flex flex-col items-center gap-3">
             <div className="w-16 h-16 rounded-full bg-orange-100 flex items-center justify-center">
-              <svg
-                className="w-8 h-8 text-orange-500"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
-                />
-              </svg>
+              {isVideo ? (
+                <svg className="w-8 h-8 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              ) : (
+                <svg className="w-8 h-8 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                </svg>
+              )}
             </div>
             <div>
               <p className="text-lg font-semibold text-gray-700">
-                광고 소재를 업로드하세요
+                {isVideo ? "동영상을 업로드하세요" : "광고 소재를 업로드하세요"}
               </p>
               <p className="text-sm text-gray-500 mt-1">
-                PNG 파일 / 1080x1566px / 1MB 이내
+                {spec.description}
               </p>
             </div>
             <p className="text-xs text-gray-400">

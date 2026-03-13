@@ -15,6 +15,7 @@ const statusConfig: Record<
   pass: { icon: "V", bg: "bg-green-50", text: "text-green-700", border: "border-green-200" },
   fail: { icon: "X", bg: "bg-red-50", text: "text-red-700", border: "border-red-200" },
   warning: { icon: "!", bg: "bg-yellow-50", text: "text-yellow-700", border: "border-yellow-200" },
+  info: { icon: "i", bg: "bg-blue-50", text: "text-blue-700", border: "border-blue-200" },
   pending: { icon: "-", bg: "bg-gray-50", text: "text-gray-500", border: "border-gray-200" },
   loading: { icon: "...", bg: "bg-gray-50", text: "text-gray-500", border: "border-gray-200" },
 };
@@ -25,6 +26,7 @@ function StatusBadge({ status }: { status: ReviewStatus }) {
     pass: "통과",
     fail: "미통과",
     warning: "주의",
+    info: "확인",
     pending: "대기",
     loading: "분석중",
   };
