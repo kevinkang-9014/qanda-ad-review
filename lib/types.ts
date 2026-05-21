@@ -73,7 +73,7 @@ export const AD_FORMATS: Record<string, AdFormatSpec> = {
   },
   communityBanner: {
     id: "communityBanner",
-    name: "커뮤니티 배너 (댓글 이벤트 전용)",
+    name: "커뮤니티 배너(내부 검수용)",
     mediaType: "image",
     width: 984,
     height: 720,
